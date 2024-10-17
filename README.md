@@ -2,318 +2,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Pou Mejorado</title>
+    <title>Mi Pou Avanzado</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-
-        header {
-            background-color: #ffcc99;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        h1 {
-            margin: 0;
-            color: #444;
-        }
-
-        #monedas-container, #nivel-container {
-            font-size: 1em; /* Cambiado para pantallas pequeñas */
-            color: #333;
-        }
-
-        main {
-            margin-top: 20px;
-            padding: 0 10px; /* Añadido padding para espacios */
-        }
-
-        #pou-container {
-            margin: 0 auto;
+            font-family: 'Comic Sans MS', cursive;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+            padding: 20px;
         }
-
-        #pou-img {
-            width: 150px; /* Ajustado para pantallas pequeñas */
-            height: 150px; /* Ajustado para pantallas pequeñas */
+        #game-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            width: 400px;
+        }
+        #pou {
+            width: 150px;
+            height: 150px;
+            background-color: #a0a0a0;
             border-radius: 50%;
-            animation: bounce 2s infinite;
+            margin: 20px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
+        #pou:hover {
+            transform: scale(1.1);
         }
-
-        .barra {
-            width: 80%;
+        #pou img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .stat {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .stat-bar {
+            width: 100%;
+            height: 15px;
             background-color: #ddd;
             border-radius: 10px;
-            margin: 10px auto;
-            padding: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        .nivel {
+        .stat-fill {
+            height: 100%;
             width: 100%;
-            height: 20px;
-            background-color: green;
-            border-radius: 10px;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
         }
-
+        #actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
         button {
-            padding: 10px 15px; /* Ajustado para pantallas pequeñas */
-            background-color: #ff6600;
-            color: white;
+            margin: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #ff9800;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
         }
-
         button:hover {
-            background-color: #ff4500;
+            background-color: #f57c00;
         }
-
-        /* Tienda */
-        #tienda {
-            margin-top: 30px;
+        #minigame {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+            font-size: 14px;
         }
-
-        #articulos-tienda {
+        #inventory {
             display: flex;
-            flex-wrap: wrap; /* Permitir que los artículos se ajusten */
-            justify-content: center; /* Centramos los artículos */
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .item {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .item:hover {
+            transform: scale(1.1);
+        }
+        #level-info {
+            font-size: 16px;
+            font-weight: bold;
             margin-top: 10px;
         }
-
-        .articulo {
-            width: 150px;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 10px; /* Añadido margen para separación */
+        #coins {
+            font-size: 16px;
+            color: #ffd700;
+            margin-top: 5px;
         }
-
-        .articulo img {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 10px;
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
-
-        /* Media queries para pantallas pequeñas */
-        @media (max-width: 600px) {
-            header {
-                padding: 15px;
+        .bouncing {
+            animation: bounce 0.5s;
+        }
+        #mute-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #333;
+        }
+        @media (max-width: 480px) {
+            #game-container {
+                padding: 10px;
             }
-
-            #monedas-container, #nivel-container {
-                font-size: 0.9em; /* Ajustar tamaño de fuente para pantallas pequeñas */
+            #pou {
+                width: 120px;
+                height: 120px;
             }
-
-            #pou-img {
-                width: 120px; /* Ajuste adicional para pantallas pequeñas */
-                height: 120px; /* Ajuste adicional para pantallas pequeñas */
-            }
-
             button {
-                padding: 8px 12px; /* Reducción en el padding de botones */
-                font-size: 0.9em; /* Ajuste de tamaño de fuente en botones */
+                padding: 6px 10px;
+                font-size: 12px;
             }
-
-            .articulo {
-                width: 80%; /* Hacer los artículos más anchos en pantallas pequeñas */
-                margin: 5px; /* Reducir el margen */
+            .stat, #level-info, #coins {
+                font-size: 12px;
+            }
+            .item {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
             }
         }
-
     </style>
 </head>
 <body>
-    <header>
-        <h1>Mi Pou</h1>
-        <div id="monedas-container">
-            💰 Monedas: <span id="monedas">100</span>
+    <div id="game-container">
+        <button id="mute-button">🔊</button>
+        <div id="pou">
+            <img src="fotos/godo-removebg-preview.png" alt="Pou">
         </div>
-        <div id="nivel-container">
-            🏆 Nivel: <span id="nivel">1</span>
-        </div>
-    </header>
-
-    <main>
-        <!-- Contenedor de Pou -->
-        <div id="pou-container">
-            <img id="pou-img" src="fotos/godo-removebg-preview.png" alt="Pou">
-        </div>
-
-        <!-- Estado de Pou -->
-        <div id="estado">
-            <div class="barra">🍕 Comida: <div class="nivel" id="comidaNivel"></div></div>
-            <div class="barra">🎮 Diversión: <div class="nivel" id="diversionNivel"></div></div>
-            <div class="barra">🛌 Energía: <div class="nivel" id="energiaNivel"></div></div>
-            <div class="barra">🚿 Higiene: <div class="nivel" id="higieneNivel"></div></div>
-            <div class="barra">⚕️ Salud: <div class="nivel" id="saludNivel"></div></div>
-        </div>
-
-        <!-- Botones de acciones -->
-        <div id="acciones">
-            <button onclick="alimentar()">🍕 Alimentar</button>
-            <button onclick="jugar()">🎮 Jugar</button>
-            <button onclick="limpiar()">🚿 Limpiar</button>
-            <button onclick="dormir()">🛌 Dormir</button>
-            <button onclick="curar()">⚕️ Curar</button>
-        </div>
-
-        <!-- Sección de tienda -->
-        <section id="tienda">
-            <h2>Tienda</h2>
-            <div id="articulos-tienda">
-                <!-- Artículos de la tienda -->
-                <div class="articulo">
-                    <p>Gorra</p>
-                    <img src="fotos/gorra.png" alt="Gorra">
-                    <button onclick="comprarArticulo('gorra')">Comprar - 50 monedas</button>
-                </div>
-                <div class="articulo">
-                    <p>Comida Especial</p>
-                    <img src="fotos/comida-removebg-preview.png" alt="Comida">
-                    <button onclick="comprarArticulo('comida')">Comprar - 30 monedas</button>
-                </div>
-                <div class="articulo">
-                    <p>Decoración Casa</p>
-                    <img src="decoracion.png" alt="Decoración">
-                    <button onclick="comprarArticulo('decoracion')">Comprar - 100 monedas</button>
-                </div>
+        <div id="level-info">Nivel: <span id="level">1</span> (XP: <span id="xp">0</span>/100)</div>
+        <div id="coins">🪙 <span id="coins-amount">100</span></div>
+        <div id="stats">
+            <div class="stat">
+                Hambre: <div class="stat-bar"><div id="hunger-bar" class="stat-fill"></div></div>
             </div>
-        </section>
-
-        <!-- Minijuegos -->
-        <section id="minijuegos">
-            <h2>Minijuegos</h2>
-            <button onclick="minijuegoSalto()">🏃‍♂️ Juego de Salto</button>
-            <button onclick="minijuegoMemoria()">🧠 Juego de Memoria</button>
-        </section>
-    </main>
+            <div class="stat">
+                Felicidad: <div class="stat-bar"><div id="happiness-bar" class="stat-fill"></div></div>
+            </div>
+            <div class="stat">
+                Energía: <div class="stat-bar"><div id="energy-bar" class="stat-fill"></div></div>
+            </div>
+            <div class="stat">
+                Higiene: <div class="stat-bar"><div id="hygiene-bar" class="stat-fill"></div></div>
+            </div>
+            <div class="stat">
+                Salud: <div class="stat-bar"><div id="health-bar" class="stat-fill"></div></div>
+            </div>
+        </div>
+        <div id="actions">
+            <button onclick="feed()">Alimentar</button>
+            <button onclick="play()">Jugar</button>
+            <button onclick="sleep()">Dormir</button>
+            <button onclick="clean()">Limpiar</button>
+            <button onclick="exercise()">Ejercicio</button>
+            <button onclick="shop()">Tienda</button>
+        </div>
+        <div id="inventory">
+            <!-- Los items se añadirán dinámicamente -->
+        </div>
+        <div id="minigame">
+            <h3>Mini-juego: Adivina el número</h3>
+            <p>Adivina un número entre 1 y 10:</p>
+            <input type="number" id="guess" min="1" max="10">
+            <button onclick="guessNumber()">Adivinar</button>
+            <p id="minigame-result"></p>
+        </div>
+    </div>
 
     <script>
-        // Variables iniciales del estado de Pou
-        let comida = 100;
-        let diversion = 100;
-        let energia = 100;
-        let higiene = 100;
-        let salud = 100;
-        let monedas = 100;
-        let nivel = 1;
+        let stats = {
+            hunger: 100,
+            happiness: 100,
+            energy: 100,
+            hygiene: 100,
+            health: 100
+        };
+        let level = 1;
+        let xp = 0;
+        let coins = 100;
+        let inventory = [];
+        let isMuted = false;
 
-        // Función para actualizar las barras de estado
-        function actualizarEstado() {
-            document.getElementById('comidaNivel').style.width = comida + '%';
-            document.getElementById('diversionNivel').style.width = diversion + '%';
-            document.getElementById('energiaNivel').style.width = energia + '%';
-            document.getElementById('higieneNivel').style.width = higiene + '%';
-            document.getElementById('saludNivel').style.width = salud + '%';
-            document.getElementById('monedas').textContent = monedas;
-            document.getElementById('nivel').textContent = nivel;
+        const sounds = {
+            feed: new Audio("musica/fondo.mpeg"), // Base64 encoded eating sound
+            play: new Audio("musica/nom.mp3"), // Base64 encoded playing sound
+            levelUp: new Audio("musica/nivel.mp3") // Base64 encoded level up sound
+        };
 
-            if (comida <= 0 || diversion <= 0 || energia <= 0 || higiene <= 0 || salud <= 0) {
-                alert("¡Pou está triste! Debes cuidarlo.");
+        function playSound(soundName) {
+            if (!isMuted) {
+                sounds[soundName].play();
             }
         }
 
-        // Funciones para las acciones
-        function alimentar() {
-            if (comida < 100 && monedas >= 10) {
-                comida += 10;
-                monedas -= 10;
+        function updateStats() {
+            for (let stat in stats) {
+                stats[stat] = Math.max(0, stats[stat] - 0.2);
+                document.getElementById(`${stat}-bar`).style.width = `${stats[stat]}%`;
             }
-            actualizarEstado();
+            updatePouAppearance();
         }
 
-        function jugar() {
-            if (diversion < 100 && energia > 10) {
-                diversion += 20;
-                energia -= 10;
+        function updatePouAppearance() {
+            const pou = document.getElementById('pou');
+            if (Object.values(stats).some(value => value < 30)) {
+                pou.style.filter = 'grayscale(100%) brightness(50%)';
+            } else if (Object.values(stats).some(value => value < 50)) {
+                pou.style.filter = 'sepia(100%) brightness(70%)';
+            } else {
+                pou.style.filter = 'brightness(100%)';
             }
-            actualizarEstado();
         }
 
-        function limpiar() {
-            if (higiene < 100) {
-                higiene += 20;
+        function addXP(amount) {
+            xp += amount;
+            if (xp >= 100) {
+                level++;
+                xp -= 100;
+                playSound('levelUp');
+                alert(`¡Felicidades! Has subido al nivel ${level}`);
             }
-            actualizarEstado();
+            document.getElementById('level').textContent = level;
+            document.getElementById('xp').textContent = xp;
         }
 
-        function dormir() {
-            if (energia < 100) {
-                energia += 30;
+        function updateCoins(amount) {
+            coins += amount;
+            document.getElementById('coins-amount').textContent = coins;
+        }
+
+        function feed() {
+            playSound('feed');
+            stats.hunger = Math.min(100, stats.hunger + 20);
+            stats.energy = Math.max(0, stats.energy - 5);
+            addXP(5);
+            animatePou();
+        }
+
+        function play() {
+            playSound('play');
+            stats.happiness = Math.min(100, stats.happiness + 20);
+            stats.energy = Math.max(0, stats.energy - 10);
+            stats.hygiene = Math.max(0, stats.hygiene - 5);
+            addXP(10);
+            animatePou();
+        }
+
+        function sleep() {
+            stats.energy = Math.min(100, stats.energy + 30);
+            stats.hunger = Math.max(0, stats.hunger - 10);
+            addXP(5);
+            animatePou();
+        }
+
+        function clean() {
+            stats.hygiene = Math.min(100, stats.hygiene + 30);
+            stats.energy = Math.max(0, stats.energy - 5);
+            addXP(5);
+            animatePou();
+        }
+
+        function exercise() {
+            stats.health = Math.min(100, stats.health + 20);
+            stats.energy = Math.max(0, stats.energy - 15);
+            stats.hunger = Math.max(0, stats.hunger - 10);
+            addXP(15);
+            animatePou();
+        }
+
+        function shop() {
+            alert(`Tienes ${coins} monedas. ¡Próximamente podrás comprar items!`);
+        }
+
+        function guessNumber() {
+            const guess = document.getElementById('guess').value;
+            const correct = Math.floor(Math.random() * 10) + 1;
+            const result = document.getElementById('minigame-result');
+            
+            if (guess == correct) {
+                result.textContent = '¡Correcto! Has ganado 10 monedas.';
+                stats.happiness = Math.min(100, stats.happiness + 10);
+                updateCoins(10);
+                addXP(20);
+                playSound('play');
+            } else {
+                result.textContent = `Incorrecto. El número era ${correct}.`;
             }
-            actualizarEstado();
         }
 
-        function curar() {
-            if (salud < 100 && monedas >= 15) {
-                salud += 15;
-                monedas -= 15;
+        function animatePou() {
+            const pou = document.getElementById('pou');
+            pou.classList.add('bouncing');
+            setTimeout(() => pou.classList.remove('bouncing'), 500);
+        }
+
+        function addToInventory(item) {
+            inventory.push(item);
+            updateInventoryDisplay();
+        }
+
+        function updateInventoryDisplay() {
+            const inventoryElement = document.getElementById('inventory');
+            inventoryElement.innerHTML = '';
+            inventory.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'item';
+                itemElement.textContent = item.emoji;
+                itemElement.title = item.name;
+                itemElement.onclick = () => useItem(item);
+                inventoryElement.appendChild(itemElement);
+            });
+        }
+
+        function useItem(item) {
+            // Implementar efectos de los items
+            alert(`Usaste ${item.name}`);
+            const index = inventory.indexOf(item);
+            if (index > -1) {
+                inventory.splice(index, 1);
             }
-            actualizarEstado();
+            updateInventoryDisplay();
         }
 
-        // Funciones de la tienda
-        function comprarArticulo(articulo) {
-            switch (articulo) {
-                case 'gorra':
-                    if (monedas >= 50) {
-                        monedas -= 50;
-                        alert("¡Has comprado una gorra!");
-                    } else {
-                        alert("¡No tienes suficientes monedas!");
-                    }
-                    break;
-                case 'comida':
-                    if (monedas >= 30) {
-                        monedas -= 30;
-                        alert("¡Has comprado comida especial!");
-                    } else {
-                        alert("¡No tienes suficientes monedas!");
-                    }
-                    break;
-                case 'decoracion':
-                    if (monedas >= 100) {
-                        monedas -= 100;
-                        alert("¡Has comprado decoración!");
-                    } else {
-                        alert("¡No tienes suficientes monedas!");
-                    }
-                    break;
+        document.getElementById('mute-button').addEventListener('click', function() {
+            isMuted = !isMuted;
+            this.textContent = isMuted ? '🔇' : '🔊';
+        });
+
+        setInterval(updateStats, 1000);
+
+        // Permitir que el usuario cambie la imagen del Pou
+        document.getElementById('pou').addEventListener('click', function() {
+            const imageUrl = prompt('Introduce la URL de la nueva imagen para tu Pou:');
+            if (imageUrl) {
+                document.querySelector('#pou img').src = imageUrl;
             }
-            actualizarEstado();
-        }
+        });
 
-        // Minijuegos (placeholder)
-        function minijuegoSalto() {
-            alert("¡Minijuego de salto aún no implementado!");
-        }
+        // Añadir algunos items de ejemplo al inventario
+        addToInventory({ name: "Manzana", emoji: "🍎" });
+        addToInventory({ name: "Pelota", emoji: "⚽" });
+        addToInventory({ name: "Libro", emoji: "📚" });
 
-        function minijuegoMemoria() {
-            alert("¡Minijuego de memoria aún no implementado!");
-        }
-
-        // Actualiza el estado al cargar la página
-        actualizarEstado();
+        // Inicializar la visualización de monedas
+        updateCoins(0);
     </script>
 </body>
 </html>
